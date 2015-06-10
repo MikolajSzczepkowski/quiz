@@ -4,20 +4,20 @@
 	<meta charset="UTF-8">
 	<title>quiz</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="style.css">
 </head>
 <body>
 	<section class="container">
 		<h1 class="col-md-12 text-center">Quiz</h1>
-		<h2 class="col-md-12 text-center">Odpowiadaj rozważnie, masz jedną szansę!<h2>
 		<div id="score" class="badge"></div>
 		<div id="image"></div>
-		<p id="question" class="col-md-12 text-center">Pytanie numer: </p>
+		<h3 id="question" class="col-md-12 text-center"></h3>
 		<form class="col-md-8 col-md-offset-4">
-			<label id="0"><input type="radio" name="answer"></label><br>
-			<label id="1"><input type="radio" name="answer"></label><br>
-			<label id="2"><input type="radio" name="answer"></label><br>
-			<label id="3"><input type="radio" name="answer"></label><br>
-			<input type="submit" value="next">
+			<input type="radio" name="answer" value="answer" id="0"><label id="answer1" for="0"></label><br>
+			<input type="radio"name="answer" value="answer" id="1"><label id="answer2" for="1"></label><br>
+			<input type="radio"name="answer" value="answer" id="2"><label id="answer3" for="2"></label><br>
+			<input type="radio"name="answer" value="answer" id="3"><label id="answer4" for="3"></label><br>
+			<button type="submit" class="btn btn-md">Następne pytanie</button>
 		</form>
 	</section>
 <script src="https://code.jquery.com/jquery-2.1.3.js"></script>
