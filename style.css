@@ -5,6 +5,8 @@ label{
 	font-size: 14px;
 	line-height: 20px;
 	padding: 5px;
-	margin: 5px 0 0 0;
+	margin: 5px 5px 0 0;
 }
-
+.btn{
+	margin: 10px;
+}
