@@ -10,3 +10,25 @@ label{
 .btn{
 	margin: 10px;
 }
+#image{
+	padding: 30px 0 0 0;
+}
+.rightAnswer{
+	border: 2px solid green;
+	color: green;
+}
+.wrongAnswer{
+	border: 2px solid red;
+	color: red;
+}
+.glyphicon-remove{
+	color: red;
+	margin: 0 10px 0 0;
+}
+#newGame{
+	display: block;
+	margin: 20px auto;
+}
+#space{
+	height: 70px;
+}

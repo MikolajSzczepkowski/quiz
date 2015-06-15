@@ -1,5 +1,4 @@
 
-	var scoreArray = [];
 	var score = 0;
 	var answers=[];
 	var currentQuestion = 0;
@@ -31,21 +30,21 @@
 	createQuizContainer();
 
 	// ładowanie zdjęcia do pytania
-	placeImage = function(){
+	placeImage = function(questionNumber){
 		var img = $("<div id='image'></div>");
 		$("#quizPack").prepend(img);
-		$(img).append("<img id=image class='col-md-offset-4 img-rounded' width='374' height='306' src=" + allQuestions[currentQuestion].imageAdress +">");
+		$(img).append("<img id=image class='col-md-offset-4 img-rounded' width='394' height='326' src=" + allQuestions[questionNumber].imageAdress +">");
 	};
-	placeImage();
+	placeImage(currentQuestion);
 
 	//ładowanie pytań
-	placeQustion = function(){
+	placeQustion = function(questionNumber){
 		var qst = $("<h3 id='question' class='col-md-12 text-center'></h3>");
 		$("#image").after(qst);
 		$(qst).text("Pytanie numer: ");
-		$(qst).append(allQuestions[currentQuestion].question);
+		$(qst).append(allQuestions[questionNumber].question);
 	};
-	placeQustion();
+	placeQustion(currentQuestion);
 
 	//ładowanie formularza 
 	placeForm = function(){
@@ -55,20 +54,35 @@
 	placeForm();
 
 	//ładowanie odpowiedzi
-	placeAnswers = function(){
-		var div = $("<div id='answers' class='col-md-9 col-md-offset-3'></div>");
+	placeAnswers = function(questionNumber){
+		var div = $("<div id=answers class='col-md-9 col-md-offset-3'></div>");
 		$("form").append(div);
-		for(var i = 0; i < 4; i++){
+		var i;
+		for(i = 0; i < 4; i++){
 			var inpt = $("<input>");
 			$(inpt).attr({type:"radio", name:"answer", id:i});
 	        $(div).append(inpt);
 	        var lbl = $("<label></label>");
 	        $(lbl).attr("for",i);
 	        $(div).append(lbl);
-	        $(lbl).append(allQuestions[currentQuestion].choices[i]);
+	        $(lbl).append(allQuestions[questionNumber].choices[i]);
 		}
 	};
-	placeAnswers();
+	placeAnswers(currentQuestion);
+
+	//ładowanie odpowiedzi na koniec
+	placeEndAnswers = function(questionNumber){
+		var div = $("<div class='col-md-9 col-md-offset-3'></div>");
+		$(div).attr("id","answersSet" + questionNumber);
+		$("form").append(div);
+		var i;
+		for(i = 0; i < 4; i++){
+	        var lbl = $("<label></label>");
+	        $(lbl).attr("for",i);
+	        $("#answersSet"+questionNumber).append(lbl);
+	        $(lbl).append(allQuestions[questionNumber].choices[i]);
+		}
+	};
 
 	//ładowanie przycisków
 	placeButtons = function(){
@@ -82,29 +96,39 @@
 
 	//ładowanie wyniku
 	placeScore = function(){
+		var h2 = $("<h2 id=score class='col-md-12 text-center'></h2>");
+		$("#quizPack").prepend(h2);
 		$("#score").text("Twój wynik :" + score + "/" + totalQuestions);
 	};
-	placeScore();
+
+	//ładowanie przycisku "graj jeszcze raz"
+	placeNewGameButton = function(){
+		var div = $("<div id='space' class='col-md-12'>");
+		$("#quizPack").append(div);
+		$(div).after("<button type='button' class='btn btn-lg' id='newGame'>Graj jeszcze raz!</button>");
+	};
 
 	//przechodzenie do następnego pytania
 	$("form").on("submit",function(e){
 		e.preventDefault();
-		if($('input[name=answer]:checked').attr("id") == allQuestions[currentQuestion].correctAnswer){
-			scoreArray.push($('input[name=answer]:checked').attr("id"));
-			score = scoreArray.length;
-		};
+		answers.push($('input[name=answer]:checked').attr("id"));
+		currentQuestion ++;
+		if(currentQuestion==totalQuestions){
+			$("#nextQuestion").remove();
+			$("#prevQuestion").after("To było ostatnie pytanie.");
+		}
+		else{
 		$("#image").remove();
 		$("#question").remove();
 		$("#answers").remove();
 		$("#buttons").remove();
-		currentQuestion ++;
-		placeImage();
-		placeQustion();
-		placeAnswers();
+		placeImage(currentQuestion);
+		placeQustion(currentQuestion);
+		placeAnswers(currentQuestion);
 		placeButtons();
 		activePrevButton();
+		};
 	});
-	//zakończenie gry
 
 	//aktywowanie przycinku 'poprzednie pytanie'
 	activePrevButton = function(){
@@ -123,13 +147,39 @@
 		$("#answers").remove();
 		$("#buttons").remove();
 		currentQuestion --;
-		placeImage();
-		placeQustion();
-		placeAnswers();
+		answers.pop();
+		placeImage(currentQuestion);
+		placeQustion(currentQuestion);
+		placeAnswers(currentQuestion);
 		placeButtons();
 		activePrevButton();
 	});
 
-//koniec gry- przycisk 'zakończ grę', wyswitlic wszystko i ktore dobre
-//moze przycisk cofania
-//
+	//zakończenie gry
+	$(document.body).on('click',"#endGame",function(){
+		var j;
+		$("#quizPack").empty();
+		for (j = 0; j < totalQuestions; j++) {
+			placeImage(j);
+			placeQustion(j);
+			placeForm();
+			placeEndAnswers(j);
+			$("label").eq(allQuestions[j].correctAnswer).addClass("rightAnswer");
+			if(answers[j] == allQuestions[j].correctAnswer){
+				score ++;
+			}
+			else{
+				$("label").eq(answers[j]).addClass("wrongAnswer");
+			};
+			if(answers[j] == undefined){
+				$("#answersSet"+j).prepend("<span class='glyphicon glyphicon-remove'></span>");
+			};
+		};
+		placeScore();
+		placeNewGameButton();
+	});
+
+	//nowa gra
+	$(document.body).on('click',"#newGame",function(){
+		location.reload();
+	});
