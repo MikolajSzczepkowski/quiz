@@ -1,13 +1,13 @@
-
+$(function(){
 	var score = 0;
 	var answers=[];
 	var currentQuestion = 0;
 
 	//pytania i odpowiedzi
-	var allQuestions = [{question: "1. Who is Prime Minister of the United Kingdom?", 
-						choices: ["1.David Cameron", "1.Gordon Brown", "1.Winston Churchill", "1.Tony Blair"],
+	var allQuestions = [{question: "Kto jest autorem słynnych 'Słoneczników'?", 
+						choices: ["Vincent van Gogh", "Leonardo da Vinci", "Vermeer", "S. Dali"],
 						correctAnswer:0,
-						imageAdress: "https://myworldofcmpunk.files.wordpress.com/2012/07/pics_in_a_pic_avatar_best_in_the_world_cm_punk_by_lovelives4ever-d5cxtt2.jpg"},
+						imageAdress: "http://pixabay.com/get/8cba66fca7a0f5b0861e/1434468655/sunflowers-76119_1280.jpg?direct"},
 						{question: "2. Who is Prime Minister of the United Kingdom?", 
 						choices: ["2.David Cameron", "2.Gordon Brown", "2.Winston Churchill", "2.Tony Blair"],
 						correctAnswer:1,
@@ -25,7 +25,7 @@
 
 	//tworzenie pudełka na quiz
 	createQuizContainer = function(){
-		$("h1").after("<section id='quizPack'></section>")
+		$("h1").after("<section id='quizPack'></section>");
 	};
 	createQuizContainer();
 
@@ -41,7 +41,7 @@
 	placeQustion = function(questionNumber){
 		var qst = $("<h3 id='question' class='col-md-12 text-center'></h3>");
 		$("#image").after(qst);
-		$(qst).text("Pytanie numer: ");
+		$(qst).text("Pytanie numer: "+ (questionNumber+1) + ". ");
 		$(qst).append(allQuestions[questionNumber].question);
 	};
 	placeQustion(currentQuestion);
@@ -105,7 +105,7 @@
 	placeNewGameButton = function(){
 		var div = $("<div id='space' class='col-md-12'>");
 		$("#quizPack").append(div);
-		$(div).after("<button type='button' class='btn btn-lg' id='newGame'>Graj jeszcze raz!</button>");
+		$(div).after("<button type='button' class='btn btn-lg' id='newGame'>Zagraj jeszcze raz!</button>");
 	};
 
 	//przechodzenie do następnego pytania
@@ -167,11 +167,10 @@
 			$("label").eq(allQuestions[j].correctAnswer).addClass("rightAnswer");
 			if(answers[j] == allQuestions[j].correctAnswer){
 				score ++;
+				$("#answersSet"+j).prepend("<span class='glyphicon glyphicon-ok'></span>");
 			}
-			else{
+			else if(answers[j] !== allQuestions[j].correctAnswer){
 				$("label").eq(answers[j]).addClass("wrongAnswer");
-			};
-			if(answers[j] == undefined){
 				$("#answersSet"+j).prepend("<span class='glyphicon glyphicon-remove'></span>");
 			};
 		};
@@ -183,3 +182,4 @@
 	$(document.body).on('click',"#newGame",function(){
 		location.reload();
 	});
+});

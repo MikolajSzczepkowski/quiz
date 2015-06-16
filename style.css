@@ -11,7 +11,7 @@ label{
 	margin: 10px;
 }
 #image{
-	padding: 30px 0 0 0;
+	padding: 50px 0 0 0;
 }
 .rightAnswer{
 	border: 2px solid green;
@@ -20,6 +20,10 @@ label{
 .wrongAnswer{
 	border: 2px solid red;
 	color: red;
+}
+.glyphicon-ok{
+	color: green;
+	margin: 0 10px 0 0;
 }
 .glyphicon-remove{
 	color: red;
