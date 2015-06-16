@@ -58,7 +58,7 @@ $(function(){
 		var div = $("<div id=answers class='col-md-9 col-md-offset-3'></div>");
 		$("form").append(div);
 		var i;
-		for(i = 0; i < 4; i++){
+		for(i = 0; i < allQuestions[questionNumber].choices.length; i++){
 			var inpt = $("<input>");
 			$(inpt).attr({type:"radio", name:"answer", id:i});
 	        $(div).append(inpt);
