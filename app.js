@@ -5,14 +5,14 @@ $(function(){
 
 	//pytania i odpowiedzi
 	var allQuestions = [{question: "Kto jest autorem słynnych 'Słoneczników'?", 
-						choices: ["Vincent van Gogh", "Leonardo da Vinci", "Vermeer", "S. Dali"],
+						choices: ["Vincent van Gogh", "Leonardo da Vinci", "Jan Vermeer", "Salvadore Dali"],
 						correctAnswer:0,
 						imageAdress: "https://unsplash.com/photos/V63oM8OPJSo/download"},
-						{question: "W ktrym roku stanęła w Londynie pierwsz budka telefoniczna?", 
+						{question: "W którym roku stanęła w Londynie pierwsza budka telefoniczna?", 
 						choices: ["1889", "1903", "1920", "1945"],
 						correctAnswer:1,
 						imageAdress: "https://download.unsplash.com/photo-1430760814266-9c81759e5e55"},
-						{question: "Jak się mekka polskiego windusrfingu?", 
+						{question: "Jak nazywa się mekka polskiego windusrfingu?", 
 						choices: ["Zakopane", "Gdańsk", "Chałupy", "Alacati"],
 						correctAnswer:2,
 						imageAdress: "https://download.unsplash.com/photo-1431184052543-809fa8cc9bd6"},
@@ -20,6 +20,14 @@ $(function(){
 						choices: ["(0%, 0%, 0%, 3%)", "(0, 250, 0)", "(128, 128, 128)", "(250, 0, 250)"],
 						correctAnswer:1,
 						imageAdress: "https://download.unsplash.com/photo-1430126833726-4a091c572f3c"},
+						{question: "Jak nazywa się polska wiodąca marka produkującą traktory?", 
+						choices: ["Niedźwiedź", "Traktorex", "Łucznik", "Ursus"],
+						correctAnswer:3,
+						imageAdress: "https://download.unsplash.com/photo-1427434846691-47fc561d1179"},
+						{question: "Co w sanskrycie oznacza słowo 'joga'?",
+						choices: ["kontrola", "rozciągliwość", "droga", "wegetarianizm"],
+						correctAnswer:0,
+						imageAdress: "https://download.unsplash.com/photo-1429277096327-11ee3b761c93"}
 						];
 	var totalQuestions = allQuestions.length;
 
@@ -76,7 +84,7 @@ $(function(){
 		$(div).attr("id","answersSet" + questionNumber);
 		$("form").append(div);
 		var i;
-		for(i = 0; i < 4; i++){
+		for(i = 0; i < allQuestions[questionNumber].choices.length; i++){
 	        var lbl = $("<label></label>");
 	        $(lbl).attr("for",i);
 	        $("#answersSet"+questionNumber).append(lbl);
