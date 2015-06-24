@@ -1,10 +1,8 @@
 $(function(){
-	var score = 0;
-	var answers=[];
-	var currentQuestion = 0;
-
-	//pytania i odpowiedzi
-	var allQuestions = [{question: "Kto jest autorem słynnych 'Słoneczników'?", 
+	var score = 0,
+		answers=[],
+		currentQuestion = 0,
+		allQuestions = [{question: "Kto jest autorem słynnych 'Słoneczników'?", 
 						choices: ["Vincent van Gogh", "Leonardo da Vinci", "Jan Vermeer", "Salvadore Dali"],
 						correctAnswer:0,
 						imageAdress: "https://unsplash.com/photos/V63oM8OPJSo/download"},
@@ -28,14 +26,15 @@ $(function(){
 						choices: ["kontrola", "rozciągliwość", "droga", "wegetarianizm"],
 						correctAnswer:0,
 						imageAdress: "https://download.unsplash.com/photo-1429277096327-11ee3b761c93"}
-						];
-	var totalQuestions = allQuestions.length;
+						],
+		totalQuestions = allQuestions.length;
 
-	//tworzenie pudełka na quiz
-	createQuizContainer = function(){
-		$("h1").after("<section id='quizPack'></section>");
+	$("h1").after("<section id='quizPack'></section>");
+
+	checkCurrentAnswer = function(){
+		var currentAnswer = answers[currentQuestion];
+		$("input").eq(currentAnswer).attr("checked", true);
 	};
-	createQuizContainer();
 
 	// ładowanie zdjęcia do pytania
 	placeImage = function(questionNumber){
@@ -63,7 +62,7 @@ $(function(){
 
 	//ładowanie odpowiedzi
 	placeAnswers = function(questionNumber){
-		var div = $("<div id=answers class='col-md-9 col-md-offset-3'></div>");
+		var div = $("<div id=answersSet class='col-md-9 col-md-offset-3'></div>");
 		$("form").append(div);
 		var i;
 		for(i = 0; i < allQuestions[questionNumber].choices.length; i++){
@@ -99,6 +98,45 @@ $(function(){
 		$(div).append("<button type='button' class='btn btn-md disabled' id='prevQuestion'>Poprzednie pytanie</button>");
 		$(div).append("<button type='submit' class='btn btn-md' id='nextQuestion'>Następne pytanie</button>");
 		$(div).append("<button type='button' class='btn btn-md' id='endGame'>Zakończ quiz</button>");
+
+		// ładowanie poprzedniego zestawu pytań i odpowiedzi
+		$("#prevQuestion").on('click',function(){
+			answers[currentQuestion] = $("input[name=answer]:checked").attr("id");
+			$("#image").remove();
+			$("#question").remove();
+			$("#answersSet").remove();
+			$("#buttons").remove();
+			currentQuestion --;
+			placeImage(currentQuestion);
+			placeQustion(currentQuestion);
+			placeAnswers(currentQuestion);
+			placeButtons();
+			activePrevButton();
+			checkCurrentAnswer();
+		});
+
+		//zakończenie gry
+		$("#endGame").on('click',function(){
+			var j;
+			$("#quizPack").empty();
+			for (j = 0; j < totalQuestions; j++) {
+				placeImage(j);
+				placeQustion(j);
+				placeForm();
+				placeEndAnswers(j);
+				$("label").eq(allQuestions[j].correctAnswer).addClass("rightAnswer");
+				if(answers[j] == allQuestions[j].correctAnswer){
+					score ++;
+					$("#answersSet"+j).prepend("<span class='glyphicon glyphicon-ok'></span>");
+				}
+				else if(answers[j] !== allQuestions[j].correctAnswer){
+					$("label").eq(answers[j]).addClass("wrongAnswer");
+					$("#answersSet"+j).prepend("<span class='glyphicon glyphicon-remove'></span>");
+				};
+			};
+			placeScore();
+			placeNewGameButton();
+		});
 	};
 	placeButtons();
 
@@ -114,27 +152,43 @@ $(function(){
 		var div = $("<div id='space' class='col-md-12'>");
 		$("#quizPack").append(div);
 		$(div).after("<button type='button' class='btn btn-lg' id='newGame'>Zagraj jeszcze raz!</button>");
+
+	//nowa gra
+		$("#newGame").on('click',function(){
+			location.reload();
+		});
 	};
 
 	//przechodzenie do następnego pytania
 	$("form").on("submit",function(e){
 		e.preventDefault();
-		answers.push($('input[name=answer]:checked').attr("id"));
+		answers[currentQuestion] = $("input[name=answer]:checked").attr("id");
 		currentQuestion ++;
-		if(currentQuestion==totalQuestions){
+		if(currentQuestion == (totalQuestions-1)){
+			$("#image").remove();
+			$("#question").remove();
+			$("#answersSet").remove();
+			$("#buttons").remove();
+			placeImage(currentQuestion);
+			placeQustion(currentQuestion);
+			placeAnswers(currentQuestion);
+			placeButtons();
+			activePrevButton();
+			checkCurrentAnswer();
 			$("#nextQuestion").remove();
-			$("#prevQuestion").after("To było ostatnie pytanie.");
+			$("#prevQuestion").after("To jest ostatnie pytanie.");
 		}
 		else{
-		$("#image").remove();
-		$("#question").remove();
-		$("#answers").remove();
-		$("#buttons").remove();
-		placeImage(currentQuestion);
-		placeQustion(currentQuestion);
-		placeAnswers(currentQuestion);
-		placeButtons();
-		activePrevButton();
+			$("#image").remove();
+			$("#question").remove();
+			$("#answersSet").remove();
+			$("#buttons").remove();
+			placeImage(currentQuestion);
+			placeQustion(currentQuestion);
+			placeAnswers(currentQuestion);
+			placeButtons();
+			activePrevButton();
+			checkCurrentAnswer();
 		};
 	});
 
@@ -147,47 +201,4 @@ $(function(){
 			$("#prevQuestion").addClass("disabled");
 		}
 	};
-
-	// ładowanie poprzedniego zestawu pytań i odpowiedzi
-	$(document.body).on('click',"#prevQuestion",function(){
-		$("#image").remove();
-		$("#question").remove();
-		$("#answers").remove();
-		$("#buttons").remove();
-		currentQuestion --;
-		answers.pop();
-		placeImage(currentQuestion);
-		placeQustion(currentQuestion);
-		placeAnswers(currentQuestion);
-		placeButtons();
-		activePrevButton();
-	});
-
-	//zakończenie gry
-	$(document.body).on('click',"#endGame",function(){
-		var j;
-		$("#quizPack").empty();
-		for (j = 0; j < totalQuestions; j++) {
-			placeImage(j);
-			placeQustion(j);
-			placeForm();
-			placeEndAnswers(j);
-			$("label").eq(allQuestions[j].correctAnswer).addClass("rightAnswer");
-			if(answers[j] == allQuestions[j].correctAnswer){
-				score ++;
-				$("#answersSet"+j).prepend("<span class='glyphicon glyphicon-ok'></span>");
-			}
-			else if(answers[j] !== allQuestions[j].correctAnswer){
-				$("label").eq(answers[j]).addClass("wrongAnswer");
-				$("#answersSet"+j).prepend("<span class='glyphicon glyphicon-remove'></span>");
-			};
-		};
-		placeScore();
-		placeNewGameButton();
-	});
-
-	//nowa gra
-	$(document.body).on('click',"#newGame",function(){
-		location.reload();
-	});
 });
